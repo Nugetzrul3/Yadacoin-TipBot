@@ -50,7 +50,7 @@ function Initialize() {
 	MongoClient.connect(url, function (err, dbobj) {
 		if (err) throw err;
 		console.log("Database created, or already exists!");
-		var dbo = dbobj.db("deroTipBot");
+		var dbo = dbobj.db("yadaTipBot");
 		dbo.createCollection("users", function (err, res) {
 			if (err) throw err;
 			if (log1) console.log("Collection users created or exists!");
@@ -107,11 +107,11 @@ function getWalletInfo(callback) {
 
 
 bot.on('ready', function () {
-	if (log1) console.log("DERO TipBot ready and loaded correctly! Hello, admin");
+	if (log1) console.log("YDA TipBot ready and loaded correctly! Hello, admin");
 	bot.user.setActivity('READY');
 });
 function logBlockChainTransaction(incoming, authorId, paymentid, destination_wallet_address, blockheight, amount) {
-	var dbo = db.db("deroTipBot");
+	var dbo = db.db("yadaTipBot");
 
 	if (incoming == true) { // log incoming transaction
 		getUserObjectFromPaymentId(paymentid, function (userdata) {
@@ -155,7 +155,7 @@ function getCustomMessageFromTipCommand(arguments) {
 }
 function logLocalTransaction(from, to, fromname, toname, amount) {
 
-	var dbo = db.db("deroTipBot");
+	var dbo = db.db("yadaTipBot");
 	var d = new Date(); // current date and time
 	var readableDateTimeObject = d.toLocaleDateString() + " " + d.toLocaleTimeString();
 
@@ -165,7 +165,7 @@ function logLocalTransaction(from, to, fromname, toname, amount) {
 	});
 }
 function isCallingBot(msg) {
-	if (msg.substring(0, 8) == "!tipdero") {
+	if (msg.substring(0, 8) == "!tipyada") {
 		return true;
 	} else { return false; }
 
@@ -210,12 +210,12 @@ function checkCommand(msg) {
 			case 'adminhelp':
 				isAdmin(msg.author.id, function (result) {
 					if (result == true) {
-						msg.author.send("Hello! Welcome to the ADMIN HELP SECTION. \n To show user info, type \"!tipdero showuserinfo userid\" \n To add an admin, type \"!tipdero addadmin userid\" (only available for owner) \n To remove an admin, type \"!tipdero removeadmin userid\" (only available for owner) \n To disable tipping for a user, type \"!tipdero switchtipsend userid allow/disallow\" \n To disable receive of tips for a user, type \"!tipdero switchtipreceive userid allow/disallow\" \n To stop the bot from listening to commands, type \"!tipdero stoplistening\" \n To start bot listening to commands, type \"!tipdero startlistening\" (only available to bot owner) \n To display wallet info, type \"!tipdero walletinfo\" (only available to bot owner)");
+						msg.author.send("Hello! Welcome to the ADMIN HELP SECTION. \n To show user info, type \"!tipyada showuserinfo userid\" \n To add an admin, type \"!tipyada addadmin userid\" (only available for owner) \n To remove an admin, type \"!tipyada removeadmin userid\" (only available for owner) \n To disable tipping for a user, type \"!tipyada switchtipsend userid allow/disallow\" \n To disable receive of tips for a user, type \"!tipyada switchtipreceive userid allow/disallow\" \n To stop the bot from listening to commands, type \"!tipyada stoplistening\" \n To start bot listening to commands, type \"!tipyada startlistening\" (only available to bot owner) \n To display wallet info, type \"!tipyada walletinfo\" (only available to bot owner)");
 					}
 				});
 				break;
 			case 'help':
-				msg.author.send("Hello! Welcome to Dero TipBot help section. \n To get your balance, type \"!tipdero mybalance\" \n For deposits, type \"!tipdero deposit\" \n For withdrawals, type \"!tipdero withdraw <walletaddress> <amount>\" (withdrawal fee is " + withdraw_tx_fees + " " + coin_name + ".), minimum withdrawal amount is " + withdraw_min_amount + " " + coin_name + ". \n To tip someone, type \"!tipdero tip <user_mention> <amount> <Optional: small message>\" \n We are not responsible for any system abuse, please don't deposit/leave big amounts ");
+				msg.author.send("Hello! Welcome to Yada TipBot help section. \n To get your balance, type \"!tipyada mybalance\" \n For deposits, type \"!tipyada deposit\" \n For withdrawals, type \"!tipyada withdraw <walletaddress> <amount>\" (withdrawal fee is " + withdraw_tx_fees + " " + coin_name + ".), minimum withdrawal amount is " + withdraw_min_amount + " " + coin_name + ". \n To tip someone, type \"!tipyada tip <user_mention> <amount> <Optional: small message>\" \n We are not responsible for any system abuse, please don't deposit/leave big amounts ");
 				break;
 			case 'mybalance':
 				getBalance(msg.author.id, msg, function (data) {
@@ -375,7 +375,7 @@ function checkCommand(msg) {
 }
 
 function switchTipReceive(authorId, targetId, decision, callback) {
-	var dbo = db.db("deroTipBot");
+	var dbo = db.db("yadaTipBot");
 
 	var newdecision;
 
@@ -392,7 +392,7 @@ function switchTipReceive(authorId, targetId, decision, callback) {
 
 }
 function switchTipSend(authorId, targetId, decision, callback) {
-	var dbo = db.db("deroTipBot");
+	var dbo = db.db("yadaTipBot");
 
 	var newdecision;
 
@@ -409,7 +409,7 @@ function switchTipSend(authorId, targetId, decision, callback) {
 
 }
 function addGeneralEvent(action_name, executed_By) {
-	var dbo = db.db("deroTipBot");
+	var dbo = db.db("yadaTipBot");
 	var d = new Date(); // current date and time
 	var readableDateTimeObject = d.toLocaleDateString() + " " + d.toLocaleTimeString();
 
@@ -422,7 +422,7 @@ function addGeneralEvent(action_name, executed_By) {
 
 function generateNewPaymentIdForUser(authorId, targetId, callback) {
 
-	var dbo = db.db("deroTipBot");
+	var dbo = db.db("yadaTipBot");
 
 	dbo.collection("users").findOne({ userid: targetId }, function (err, result) {
 		if (err) throw err;
@@ -454,7 +454,7 @@ function generateNewPaymentIdForUser(authorId, targetId, callback) {
 function isAdmin(authorId, callback) {
 	if (authorId == owner_id) { callback(true); return; }
 
-	var dbo = db.db("deroTipBot");
+	var dbo = db.db("yadaTipBot");
 
 	dbo.collection("admins").findOne({ userid: authorId }, function (err, result) {
 		if (err) throw err;
@@ -480,7 +480,7 @@ function showUserInfo(authorId, targetId, callback) {
 	});
 }
 function addAdmin(authorId, targetId, callback) {
-	var dbo = db.db("deroTipBot");
+	var dbo = db.db("yadaTipBot");
 
 	dbo.collection("admins").findOne({ userid: targetId }, function (err, result) {
 		if (err) throw err;
@@ -510,7 +510,7 @@ function addAdmin(authorId, targetId, callback) {
 }
 function removeAdmin(authorId, targetId, callback) {
 	if (log3) console.log("removeAdmin function was called. Command issuer id: " + authorId + " . Target (id): " + targetId);
-	var dbo = db.db("deroTipBot");
+	var dbo = db.db("yadaTipBot");
 
 	var adminObject = { userid: targetId };
 	dbo.collection("admins").deleteOne(adminObject, function (err, res) {
@@ -592,7 +592,7 @@ function withDraw(authorId, walletaddress, w_amount, callback) {
 
 function minusBalance(targetId, amount, callback) {
 	if (log3) console.log("Function minusBalance called. target (id) : " + targetId + " . amount: " + amount.toString());
-	var dbo = db.db("deroTipBot");
+	var dbo = db.db("yadaTipBot");
 
 	getUserObject(targetId, function (data) {
 
@@ -614,7 +614,7 @@ function minusBalance(targetId, amount, callback) {
 }
 
 function addBalance(targetId, amount, callback) {
-	var dbo = db.db("deroTipBot");
+	var dbo = db.db("yadaTipBot");
 
 	getUserObject(targetId, function (data) {
 
@@ -671,7 +671,7 @@ function TipSomebody(msg, authorId, tipTarget, tiptargetname, tipperauthorname, 
 					console.log(authorbalance >= transactionamount);
 					if (authorbalance >= transactionamount) {
 
-						var dbo = db.db("deroTipBot");
+						var dbo = db.db("yadaTipBot");
 						var myquery = { userid: authorId };
 						console.log("Internal transaction processing,  amount : " + transactionamount);
 						var authorNewBalance = Big(authorbalance.minus(transactionamount)).toFixed(coin_total_units);
@@ -765,7 +765,7 @@ function UpdateBalanceForUser(g_userid, callback) {
 		}
 		walletheight = data.height;
 		console.log(walletheight);
-		var dbo = db.db("deroTipBot");
+		var dbo = db.db("yadaTipBot");
 		var query = { userid: g_userid };
 		dbo.collection("users").findOne(query, function (err, result) {
 			if (err) throw err;
@@ -831,7 +831,7 @@ function UpdateBalanceForUser(g_userid, callback) {
 
 
 function createNewUser(targetId, callback) {
-	var dbo = db.db("deroTipBot");
+	var dbo = db.db("yadaTipBot");
 	var initial_balance = 0;
 	initial_balance = initial_balance.toFixed(coin_total_units);
 
@@ -849,7 +849,7 @@ function createNewUser(targetId, callback) {
 
 
 function getUserObject(targetId, callback) {
-	var dbo = db.db("deroTipBot");
+	var dbo = db.db("yadaTipBot");
 	var query = { userid: targetId };
 	dbo.collection("users").findOne(query, function (err, result) {
 		if (err) throw err;
@@ -860,7 +860,7 @@ function getUserObject(targetId, callback) {
 }
 function getUserObjectFromPaymentId(pid, callback) {
 
-	var dbo = db.db("deroTipBot");
+	var dbo = db.db("yadaTipBot");
 	var query = { paymentid: pid };
 	dbo.collection("users").findOne(query, function (err, result) {
 		if (err) throw err;
